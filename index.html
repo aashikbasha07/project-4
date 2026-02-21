@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cyber Neon Login</title>
+<style>
+    /* Reset */
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Orbitron', sans-serif; }
+
+    /* Body with black background */
+    body {
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: #000;
+        overflow: hidden;
+    }
+
+    /* Particle canvas */
+    #particles {
+        position: absolute;
+        top: 0; left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 0;
+    }
+
+    /* Login form container */
+    .login-container {
+        position: relative;
+        z-index: 1;
+        background: rgba(0,0,0,0.6);
+        padding: 50px 40px;
+        border-radius: 15px;
+        box-shadow: 0 0 30px #6a11cb, 0 0 60px #2575fc;
+        width: 380px;
+        text-align: center;
+        color: #fff;
+    }
+
+    .login-container h2 {
+        margin-bottom: 40px;
+        font-size: 32px;
+        color: #6a11cb;
+        text-shadow: 0 0 5px #6a11cb, 0 0 20px #2575fc;
+    }
+
+    /* Input groups with neon glow */
+    .input-group {
+        position: relative;
+        margin-bottom: 30px;
+    }
+
+    .input-group input {
+        width: 100%;
+        padding: 15px 45px 15px 15px;
+        border: 2px solid #6a11cb;
+        border-radius: 10px;
+        background: rgba(0,0,0,0.3);
+        color: #fff;
+        font-size: 16px;
+        outline: none;
+        transition: 0.4s;
+        box-shadow: 0 0 10px #6a11cb, 0 0 20px #2575fc inset;
+    }
+
+    .input-group input:focus {
+        border-color: #2575fc;
+        box-shadow: 0 0 20px #2575fc, 0 0 30px #6a11cb inset;
+    }
+
+    .input-group label {
+        position: absolute;
+        top: 50%;
+        left: 15px;
+        transform: translateY(-50%);
+        color: #aaa;
+        pointer-events: none;
+        transition: 0.3s;
+    }
+
+    .input-group input:focus + label,
+    .input-group input:not(:placeholder-shown) + label {
+        top: -10px;
+        left: 10px;
+        font-size: 12px;
+        color: #2575fc;
+        background: rgba(0,0,0,0.6);
+        padding: 0 5px;
+    }
+
+    /* Icons */
+    .input-group .icon {
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #6a11cb;
+        font-size: 18px;
+        transition: 0.3s;
+    }
+
+    .input-group input:focus ~ .icon {
+        color: #2575fc;
+        text-shadow: 0 0 10px #2575fc;
+    }
+
+    /* Neon button */
+    button {
+        width: 100%;
+        padding: 15px;
+        border: none;
+        border-radius: 10px;
+        background: linear-gradient(135deg, #6a11cb, #2575fc);
+        color: #fff;
+        font-size: 18px;
+        font-weight: bold;
+        cursor: pointer;
+        box-shadow: 0 0 10px #6a11cb, 0 0 20px #2575fc;
+        transition: 0.3s;
+    }
+
+    button:hover {
+        box-shadow: 0 0 20px #2575fc, 0 0 40px #6a11cb;
+        transform: translateY(-3px);
+    }
+
+    /* Signup text */
+    .signup-text {
+        margin-top: 20px;
+        font-size: 14px;
+        color: #aaa;
+    }
+
+    .signup-text a {
+        color: #6a11cb;
+        font-weight: bold;
+        text-decoration: none;
+    }
+
+    .signup-text a:hover {
+        color: #2575fc;
+        text-decoration: underline;
+    }
+
+</style>
+<!-- Google Font -->
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet">
+<!-- Font Awesome Icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+<canvas id="particles"></canvas>
+
+<div class="login-container">
+    <h2>Cyber Login</h2>
+    <form>
+        <div class="input-group">
+            <input type="text" id="username" placeholder=" " required>
+            <label for="username">Username</label>
+            <i class="fa fa-user icon"></i>
+        </div>
+        <div class="input-group">
+            <input type="password" id="password" placeholder=" " required>
+            <label for="password">Password</label>
+            <i class="fa fa-lock icon"></i>
+        </div>
+        <button type="submit">Login</button>
+    </form>
+    <p class="signup-text">Don't have an account? <a href="#">Sign Up</a></p>
+</div>
+
+<script>
+    // Particle background
+    const canvas = document.getElementById('particles');
+    const ctx = canvas.getContext('2d');
+    let particlesArray;
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    class Particle {
+        constructor(x,y,size,dx,dy){
+            this.x = x;
+            this.y = y;
+            this.size = size;
+            this.dx = dx;
+            this.dy = dy;
+        }
+        draw(){
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.size, 0, Math.PI*2);
+            ctx.fillStyle = 'rgba(106,17,203,0.8)';
+            ctx.fill();
+        }
+        update(){
+            if(this.x + this.size > canvas.width || this.x - this.size < 0){
+                this.dx = -this.dx;
+            }
+            if(this.y + this.size > canvas.height || this.y - this.size < 0){
+                this.dy = -this.dy;
+            }
+            this.x += this.dx;
+            this.y += this.dy;
+            this.draw();
+        }
+    }
+
+    function init(){
+        particlesArray = [];
+        let numberOfParticles = 100;
+        for(let i=0;i<numberOfParticles;i++){
+            let size = Math.random()*3+1;
+            let x = Math.random()*(canvas.width-size*2)+size;
+            let y = Math.random()*(canvas.height-size*2)+size;
+            let dx = (Math.random()-0.5)*1;
+            let dy = (Math.random()-0.5)*1;
+            particlesArray.push(new Particle(x,y,size,dx,dy));
+        }
+    }
+
+    function animate(){
+        requestAnimationFrame(animate);
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+        for(let i=0;i<particlesArray.length;i++){
+            particlesArray[i].update();
+        }
+    }
+
+    init();
+    animate();
+
+    // Resize
+    window.addEventListener('resize', function(){
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        init();
+    });
+</script>
+
+</body>
+</html>
